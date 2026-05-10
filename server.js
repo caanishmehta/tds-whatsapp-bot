@@ -47,7 +47,7 @@ else if (
   incomingMsg.includes("brokerage")
 ) {
   reply =
-    "194H: Commission/Brokerage TDS\nRate: 5%.";
+    "194H: Commission/Brokerage TDS\nRate: 2%.";
 }
 
 else if (
