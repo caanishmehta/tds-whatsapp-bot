@@ -22,11 +22,42 @@ app.post("/api/whatsapp/webhook", (req, res) => {
   const amountMatch = incomingMsg.match(/\d+/);
 
   const amount = amountMatch
-    ? parseFloat(amountMatch[0])
+    ? parseFloat(amountMatch[0])function formatReply(section, rate, threshold) {
+
+  if (amount < threshold) {
+
+    return `
+${section}
+
+Amount: ₹${amount.toLocaleString()}
+
+Threshold: ₹${threshold.toLocaleString()}
+
+TDS NOT Applicable
+(Threshold not crossed)
+`;
+
+  }
+
+  const tds = amount * rate / 100;
+
+  return `
+${section}
+
+Amount: ₹${amount.toLocaleString()}
+
+Threshold: ₹${threshold.toLocaleString()}
+
+Rate: ${rate}%
+
+TDS Amount: ₹${tds.toLocaleString()}
+`;
+
+}
     : 0;
 
   // Common Reply Formatter
-  function formatReply(section, rate) {
+  
 
     const tds = amount * rate / 100;
 
@@ -51,7 +82,8 @@ TDS Amount: ₹${tds.toLocaleString()}
 
     reply = formatReply(
       "194C - Contractor / Advertisement Payment",
-      1
+      1,
+      30000
     );
 
   }
@@ -66,7 +98,8 @@ TDS Amount: ₹${tds.toLocaleString()}
 
     reply = formatReply(
       "194J - Professional / Technical Fees",
-      10
+      10,
+      50000
     );
 
   }
@@ -79,7 +112,8 @@ TDS Amount: ₹${tds.toLocaleString()}
 
     reply = formatReply(
       "194I - Rent Payment",
-      10
+      10,
+      600000
     );
 
   }
@@ -93,7 +127,8 @@ TDS Amount: ₹${tds.toLocaleString()}
 
     reply = formatReply(
       "194H - Commission / Brokerage",
-      2
+      2,
+      20000
     );
 
   }
@@ -106,7 +141,8 @@ TDS Amount: ₹${tds.toLocaleString()}
 
     reply = formatReply(
       "194Q - Purchase of Goods",
-      0.1
+      0.1,
+      5000000
     );
 
   }
@@ -119,7 +155,8 @@ TDS Amount: ₹${tds.toLocaleString()}
 
     reply = formatReply(
       "194O - E-Commerce Transactions",
-      0.1
+      0.1,
+      50000
     );
 
   }
