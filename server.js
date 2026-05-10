@@ -72,6 +72,7 @@ TDS Amount: ₹${tds.toLocaleString()}
   incomingMsg.includes("fabrication") ||
   incomingMsg.includes("printing")
 )
+
     reply = formatReply(
       "194C - Contractor / Advertisement Payment",
       1,
@@ -94,6 +95,7 @@ TDS Amount: ₹${tds.toLocaleString()}
   incomingMsg.includes("ca fees") ||
   incomingMsg.includes("consultancy")
 )
+  
     reply = formatReply(
       "194J - Professional / Technical Fees",
       10,
@@ -110,6 +112,7 @@ TDS Amount: ₹${tds.toLocaleString()}
   incomingMsg.includes("office rent") ||
   incomingMsg.includes("building rent")
 )
+
     reply = formatReply(
       "194I - Rent Payment",
       10,
