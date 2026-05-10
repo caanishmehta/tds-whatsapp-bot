@@ -19,45 +19,49 @@ app.post("/api/whatsapp/webhook", (req, res) => {
   let reply = "Sorry, I could not identify the TDS section.";
 
   // Extract Amount
-const amountMatch = incomingMsg.match(/\d+/);
+  const amountMatch = incomingMsg.match(/\d+/);
 
-const amount = amountMatch
-  ? parseFloat(amountMatch[0])
-  : 0;
+  const amount = amountMatch
+    ? parseFloat(amountMatch[0])
+    : 0;
 
-// Common Reply Formatter
-function formatReply(section, rate, threshold) {
+  // Common Reply Formatter
+  function formatReply(section, rate, threshold) {
 
-  if (amount < threshold) {
+    // Threshold Check
+    if (amount < threshold) {
+
+      return `
+${section}
+
+Amount: ₹${amount.toLocaleString()}
+
+Threshold Limit: ₹${threshold.toLocaleString()}
+
+TDS NOT Applicable
+(Threshold not crossed)
+`;
+
+    }
+
+    // TDS Calculation
+    const tds = amount * rate / 100;
 
     return `
 ${section}
 
 Amount: ₹${amount.toLocaleString()}
 
-Threshold: ₹${threshold.toLocaleString()}
-
-TDS NOT Applicable
-(Threshold not crossed)
-`;
-
-  }
-
-  const tds = amount * rate / 100;
-
-  return `
-${section}
-
-Amount: ₹${amount.toLocaleString()}
-
-Threshold: ₹${threshold.toLocaleString()}
+Threshold Limit: ₹${threshold.toLocaleString()}
 
 Rate: ${rate}%
 
 TDS Amount: ₹${tds.toLocaleString()}
 `;
 
-}
+  }
+
+  // 194C
   if (
     incomingMsg.includes("194c") ||
     incomingMsg.includes("contract") ||
@@ -141,7 +145,7 @@ TDS Amount: ₹${tds.toLocaleString()}
     reply = formatReply(
       "194O - E-Commerce Transactions",
       0.1,
-      50000
+      500000
     );
 
   }
