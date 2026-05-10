@@ -66,6 +66,10 @@ TDS Amount: ₹${tds.toLocaleString()}
     incomingMsg.includes("194c") ||
     incomingMsg.includes("contract") ||
     incomingMsg.includes("contractor") ||
+    incomingMsg.includes("transport") ||
+    incomingMsg.includes("labour") ||
+    incomingMsg.includes("fabrication") ||
+    incomingMsg.includes("printing") ||
     incomingMsg.includes("advertisement")
   ) {
 
@@ -79,12 +83,15 @@ TDS Amount: ₹${tds.toLocaleString()}
 
   // 194J
   else if (
-    incomingMsg.includes("194j") ||
-    incomingMsg.includes("professional") ||
-    incomingMsg.includes("consultant") ||
-    incomingMsg.includes("technical")
-  ) {
-
+  incomingMsg.includes("194j") ||
+  incomingMsg.includes("professional") ||
+  incomingMsg.includes("consultant") ||
+  incomingMsg.includes("technical") ||
+  incomingMsg.includes("architect") ||
+  incomingMsg.includes("ca fees") ||
+  incomingMsg.includes("audit fees") ||
+  incomingMsg.includes("legal fees")
+)
     reply = formatReply(
       "194J - Professional / Technical Fees",
       10,
@@ -96,6 +103,9 @@ TDS Amount: ₹${tds.toLocaleString()}
   // 194I
   else if (
     incomingMsg.includes("194i") ||
+    incomingMsg.includes("offive rent") ||
+    incomingMsg.includes("building rent") ||
+    incomingMsg.includes("warehouse") ||
     incomingMsg.includes("rent")
   ) {
 
@@ -111,6 +121,8 @@ TDS Amount: ₹${tds.toLocaleString()}
   else if (
     incomingMsg.includes("194h") ||
     incomingMsg.includes("commission") ||
+    incomingMsg.includes("referral commission") ||
+    incomingMsg.includes("agent commission") ||
     incomingMsg.includes("brokerage")
   ) {
 
