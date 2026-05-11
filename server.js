@@ -8,7 +8,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Home Route
 app.get("/", (req, res) => {
-  res.send("TDS WhatsApp Bot Running");
+  res.send("TDS WhatsApp Bot Running Successfully");
 });
 
 // WhatsApp Webhook
@@ -25,11 +25,11 @@ app.post("/api/whatsapp/webhook", (req, res) => {
     ? parseFloat(amountMatch[0])
     : 0;
 
-  // Common Reply Formatter
+  // Formatter Function
   function formatReply(section, rate, threshold) {
 
     // Threshold Check
-    if (amount < threshold) {
+    if (amount > 0 && amount < threshold) {
 
       return `
 ${section}
@@ -44,6 +44,19 @@ TDS NOT Applicable
 
     }
 
+    // If no amount entered
+    if (amount === 0) {
+
+      return `
+${section}
+
+Threshold Limit: ₹${threshold.toLocaleString()}
+
+Applicable TDS Rate: ${rate}%
+`;
+
+    }
+
     // TDS Calculation
     const tds = amount * rate / 100;
 
@@ -54,24 +67,26 @@ Amount: ₹${amount.toLocaleString()}
 
 Threshold Limit: ₹${threshold.toLocaleString()}
 
-Rate: ${rate}%
+TDS Rate: ${rate}%
 
 TDS Amount: ₹${tds.toLocaleString()}
 `;
 
   }
 
+  // =========================
   // 194C
+  // =========================
   if (
-  incomingMsg.includes("194c") ||
-  incomingMsg.includes("contract") ||
-  incomingMsg.includes("contractor") ||
-  incomingMsg.includes("advertisement") ||
-  incomingMsg.includes("transport") ||
-  incomingMsg.includes("labour") ||
-  incomingMsg.includes("fabrication") ||
-  incomingMsg.includes("printing")
-)
+    incomingMsg.includes("194c") ||
+    incomingMsg.includes("contract") ||
+    incomingMsg.includes("contractor") ||
+    incomingMsg.includes("advertisement") ||
+    incomingMsg.includes("transport") ||
+    incomingMsg.includes("labour") ||
+    incomingMsg.includes("fabrication") ||
+    incomingMsg.includes("printing")
+  ) {
 
     reply = formatReply(
       "194C - Contractor / Advertisement Payment",
@@ -81,21 +96,24 @@ TDS Amount: ₹${tds.toLocaleString()}
 
   }
 
+  // =========================
   // 194J
+  // =========================
   else if (
-  incomingMsg.includes("194j") ||
-  incomingMsg.includes("professional") ||
-  incomingMsg.includes("consultant") ||
-  incomingMsg.includes("technical") ||
-  incomingMsg.includes("architect") ||
-  incomingMsg.includes("legal") ||
-  incomingMsg.includes("lawyer") ||
-  incomingMsg.includes("advocate") ||
-  incomingMsg.includes("audit") ||
-  incomingMsg.includes("ca fees") ||
-  incomingMsg.includes("consultancy")
-)
-  
+    incomingMsg.includes("194j") ||
+    incomingMsg.includes("professional") ||
+    incomingMsg.includes("technical") ||
+    incomingMsg.includes("consultant") ||
+    incomingMsg.includes("consultancy") ||
+    incomingMsg.includes("architect") ||
+    incomingMsg.includes("legal") ||
+    incomingMsg.includes("lawyer") ||
+    incomingMsg.includes("advocate") ||
+    incomingMsg.includes("audit") ||
+    incomingMsg.includes("ca fees") ||
+    incomingMsg.includes("doctor")
+  ) {
+
     reply = formatReply(
       "194J - Professional / Technical Fees",
       10,
@@ -104,14 +122,17 @@ TDS Amount: ₹${tds.toLocaleString()}
 
   }
 
+  // =========================
   // 194I
+  // =========================
   else if (
-  incomingMsg.includes("194i") ||
-  incomingMsg.includes("rent") ||
-  incomingMsg.includes("warehouse") ||
-  incomingMsg.includes("office rent") ||
-  incomingMsg.includes("building rent")
-)
+    incomingMsg.includes("194i") ||
+    incomingMsg.includes("rent") ||
+    incomingMsg.includes("warehouse") ||
+    incomingMsg.includes("office") ||
+    incomingMsg.includes("building") ||
+    incomingMsg.includes("godown")
+  ) {
 
     reply = formatReply(
       "194I - Rent Payment",
@@ -121,13 +142,14 @@ TDS Amount: ₹${tds.toLocaleString()}
 
   }
 
+  // =========================
   // 194H
+  // =========================
   else if (
     incomingMsg.includes("194h") ||
     incomingMsg.includes("commission") ||
-    incomingMsg.includes("referral commission") ||
-    incomingMsg.includes("agent commission") ||
-    incomingMsg.includes("brokerage")
+    incomingMsg.includes("brokerage") ||
+    incomingMsg.includes("referral")
   ) {
 
     reply = formatReply(
@@ -138,10 +160,14 @@ TDS Amount: ₹${tds.toLocaleString()}
 
   }
 
+  // =========================
   // 194Q
+  // =========================
   else if (
     incomingMsg.includes("194q") ||
-    incomingMsg.includes("purchase")
+    incomingMsg.includes("purchase") ||
+    incomingMsg.includes("purchase of goods") ||
+    incomingMsg.includes("goods purchase")
   ) {
 
     reply = formatReply(
@@ -152,10 +178,14 @@ TDS Amount: ₹${tds.toLocaleString()}
 
   }
 
+  // =========================
   // 194O
+  // =========================
   else if (
     incomingMsg.includes("194o") ||
-    incomingMsg.includes("ecommerce")
+    incomingMsg.includes("ecommerce") ||
+    incomingMsg.includes("amazon") ||
+    incomingMsg.includes("flipkart")
   ) {
 
     reply = formatReply(
@@ -179,7 +209,7 @@ TDS Amount: ₹${tds.toLocaleString()}
 
 });
 
-// Server Start
+// Start Server
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
